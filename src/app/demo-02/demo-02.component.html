@@ -1,0 +1,14 @@
+<button (click)="deleteCmponentA()">Delete component A</button>
+<button (click)="deleteCmponentB()">Delete component B</button>
+<button (click)="deleteCmponentC()">Delete component C</button>
+
+<button (click)="clear()">Clear components</button>
+
+<button (click)="updateAComponentInput()">A component change input</button>
+
+<button (click)="addAComponent()">Add component A</button>
+
+<gridstack [options]="gridOptions" (changeCB)="onChange($event)" style="border: 1px solid red;">
+  <div empty-content>message when grid is empty</div>
+</gridstack>
+
