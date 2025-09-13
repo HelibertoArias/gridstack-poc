@@ -1,9 +1,10 @@
 import {
-  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
   OnDestroy,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import {
   BaseWidget,
@@ -14,10 +15,16 @@ import {
   NgGridStackWidget,
   nodesCB,
 } from 'gridstack/dist/angular';
-import { ViewChild } from '@angular/core';
 
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { GridStackWidget } from 'gridstack';
+
+declare module 'gridstack' {
+  interface GridStackWidget {
+    input?: any;
+  }
+}
 
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
@@ -29,16 +36,15 @@ export class DashboardService {
   }
 
   public title1Subject = new BehaviorSubject<string>('hello');
-
-
 }
 
 // some custom components
 @Component({
   selector: 'app-a',
-  template: 'Comp A {{text}} -- Title {{title1}}',
- })
-export class AComponent extends BaseWidget implements OnDestroy , OnInit {
+  template:
+    'Comp A soy input: {{text}} -- Soy observable {{title1}} <br/> <button (click)="calculateFn()">Call input function</button>',
+})
+export class AComponent extends BaseWidget implements OnDestroy, OnInit {
   constructor(private readonly dashboardService: DashboardService) {
     super();
   }
@@ -46,11 +52,13 @@ export class AComponent extends BaseWidget implements OnDestroy , OnInit {
     this.dashboardService.title1Subject.subscribe((t) => (this.title1 = t));
   }
   @Input() text: string = 'defaul-value'; // test custom input data
+  @Input() calculateFn: () => void = () => {}; // test custom input data
 
   title1: string = '';
 
   public override serialize(): NgCompInputs | undefined {
-    return this.text ? { text: this.text } : undefined;
+    console.log('AComponent serialize', this.text);
+    return this.text ? { text: this.text, calculateFn: this.calculateFn } : undefined;
   }
 
   public override deserialize(w: NgGridStackWidget) {
@@ -71,7 +79,7 @@ export class AComponent extends BaseWidget implements OnDestroy , OnInit {
 @Component({
   selector: 'app-b',
   template: 'Comp B',
- })
+})
 export class BComponent extends BaseWidget {}
 
 @Component({
@@ -84,16 +92,34 @@ export class BComponent extends BaseWidget {}
   providers: [DashboardService], // per demo instance
 })
 export class Demo02Component {
-
-
   @ViewChild(GridstackComponent) gridstack?: GridstackComponent;
 
-  @ViewChild(GridstackComponent) acomponent?: AComponent;
+  @ViewChild(AComponent) acomponent?: AComponent;
 
-  constructor(private readonly dashboardService: DashboardService) {
+  constructor(
+    private readonly dashboardService: DashboardService,
+    private readonly cd: ChangeDetectorRef
+  ) {
     // register all our dynamic components types created by the grid
     GridstackComponent.addComponentToSelectorType([AComponent, BComponent]);
   }
+
+  itemHtmlWidget: GridStackWidget = { x: 3, y: 4, content: 'plain html' };
+  // custom input that works using BaseWidget.deserialize() Object.assign(this, w.input)
+
+  appaWidget: NgGridStackWidget = {
+    x: 1,
+    y: 2,
+    minW: 2,
+    selector: 'app-a',
+    input: {
+      text: 'bar',
+      calculateFn: () => {
+        console.log('Calculating...');
+      },
+    },
+  };
+  appbWidget: NgGridStackWidget = { x: 2, y: 3, selector: 'app-b' };
 
   public gridOptions: NgGridStackOptions = {
     margin: 5,
@@ -107,9 +133,9 @@ export class Demo02Component {
     children: [
       // or call load()/addWidget() with same data
       // { x: 0, y: 1, minW: 2, selector: 'app-a' },
-      { x: 1, y: 2, minW: 2, selector: 'app-a', input: { text: 'bar' } }, // custom input that works using BaseWidget.deserialize() Object.assign(this, w.input)
-      { x: 2, y: 3, selector: 'app-b' },
-      { x: 3, y: 4, content: 'plain html' },
+      this.appaWidget,
+      this.appbWidget,
+      this.itemHtmlWidget,
     ],
   };
 
@@ -159,7 +185,7 @@ export class Demo02Component {
         y: 0,
         minW: 2,
         selector: 'app-a',
-        input: { text: 'new instance' },
+        input: { text: 'new instance', },
       });
       this.gridstack?.grid?.addWidget(
         this.gridOptions.children[this.gridOptions.children.length - 1]
@@ -168,30 +194,32 @@ export class Demo02Component {
   }
 
   public updateAComponentInput(): void {
-    this.dashboardService.title1Subject.next('Title ' + new Date().toLocaleTimeString());
-    if (this.gridOptions.children && this.gridOptions.children.length > 0) {
-      const item = this.gridOptions.children.find(
+    const grid = this.gridstack?.grid;
+    if (grid && this.gridOptions.children) {
+      // Encuentra el índice del item que quieres actualizar
+      const index = this.gridOptions.children.findIndex(
         (item) => item.selector === 'app-a'
       );
-      console.log('updateAComponentInput', item);
-
-      if (item) {
-        item.input = { text: 'new eeee 1' };
-
-        this.gridstack?.grid?.commit();
-        console.log('updateAComponentInput', item);
+      if (index !== -1) {
+        // Obtén el elemento HTML correspondiente
+        const items = document.querySelectorAll('.grid-stack-item');
+        const el = items[index] as HTMLElement;
+        if (el) {
+          grid.update(el, {
+            input: {
+              text: 'Nuevo valor actualizado' + new Date().toLocaleTimeString(),
+              calculateFn: () => {
+                console.log('New updated Calculating...');
+      },
+            },
+          });
+          // this.cd.detectChanges();
+        }
       }
     }
 
-
-    // if (this.gridOptions.children && this.gridOptions.children.length > 0) {
-    //   const aComponentItem = this.gridOptions.children[0];
-    //   if (aComponentItem && aComponentItem.selector === 'app-a') {
-    //     // Update the input property
-    //     aComponentItem.input = { text: 'updated-value' };
-    //     // Refresh the grid to apply changes
-    //     this.gridstack?.grid?.update(aComponentItem, { text: 'updated-value' });
-    //   }
-    // }
+    this.dashboardService.title1Subject.next(
+      'Title ' + new Date().toLocaleTimeString()
+    );
   }
 }
