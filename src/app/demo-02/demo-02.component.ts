@@ -19,9 +19,10 @@ import {
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { GridStackWidget } from 'gridstack';
-import { FlipCardComponent } from "../../shared/UI/flip-card/flip-card/flip-card.component";
+import { FlipCardComponent } from "../../shared/UI/flip-card/flip-card.component";
 import { FlipCardFrontComponent } from '../../shared/UI/flip-card/flip-card-front/flip-card-front.component';
 import { FlipCardBackComponent } from '../../shared/UI/flip-card/flip-card-back/flip-card-back.component';
+import { FlipCardModule } from '../../shared/UI/flip-card/flip-card.module';
 
 declare module 'gridstack' {
   interface GridStackWidget {
@@ -91,7 +92,7 @@ export class BComponent extends BaseWidget {}
   templateUrl: './demo-02.component.html',
   styleUrl: './demo-02.component.scss',
   // changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [GridstackComponent, GridstackItemComponent, FlipCardComponent, FlipCardFrontComponent, FlipCardBackComponent],
+  imports: [GridstackComponent, GridstackItemComponent, FlipCardModule],
   providers: [DashboardService], // per demo instance
 })
 export class Demo02Component {

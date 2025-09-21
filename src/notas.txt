@@ -1,0 +1,39 @@
+Estructura para el widget
+
+<gridstack>
+  <!-- Added dynamically --!>
+  <app-widget->
+
+    <app-widget-header>
+      <app-widget-title>Titulo </app-widget-title>
+
+      <app-widget-title>Subtilo </app-widget-title>
+
+      <app-widget-actions>
+        <button matButton>LIKE</button>
+        <button matButton>SHARE</button>
+      </app-widget-actions>
+
+    </app-widget-header>
+
+    <app-widget-content> This is a footer </app-widget-content>
+
+    <app-widget-footer> This is a footer </app-widget-footer>
+
+  </app-widget>
+
+</gridstack>
+
+
+ng g c ./widget  --change-detection OnPush --standalone true  --skip-tests --display-block --export=true
+ng g c ./widget/widget-header  --change-detection OnPush --standalone true  --skip-tests --display-block --export=true
+ng g c ./widget/widget-title  --change-detection OnPush --standalone true  --skip-tests --display-block --export=true
+ng g c ./widget/widget-subtitle  --change-detection OnPush --standalone true  --skip-tests --display-block --export=true
+ng g c ./widget/widget-actions  --change-detection OnPush --standalone true  --skip-tests --display-block --export=true
+ng g c ./widget/widget-content  --change-detection OnPush --standalone true  --skip-tests --display-block --export=true
+ng g c ./widget/widget-footer  --change-detection OnPush --standalone true  --skip-tests --display-block --export=true
+
+ng g c ./widget/widget-content-header footer  --change-detection OnPush --standalone false  --skip-tests --display-block --export=true
+
+
+ng g c ./sample-01-widget   --change-detection OnPush --standalone false  --skip-tests --display-block --export=false
