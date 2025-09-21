@@ -1,0 +1,34 @@
+<button (click)="deleteCmponentA()">Delete component A</button>
+<button (click)="deleteCmponentB()">Delete component B</button>
+<button (click)="deleteCmponentC()">Delete component C</button>
+
+<button (click)="clear()">Clear components</button>
+
+<button (click)="updateAComponentInput()">A component change input</button>
+
+<button (click)="addAComponent()">Add component A</button>
+
+<gridstack [options]="gridOptions" (changeCB)="onChange($event)" style="border: 1px solid red;">
+  <div empty-content>message when grid is empty</div>
+</gridstack>
+
+
+<app-flip-card>
+  <app-flip-card-front>
+    <h2>Card Front empty</h2>
+  </app-flip-card-front>
+  <app-flip-card-back>
+    <h2>Card Back empty</h2>
+  </app-flip-card-back>
+</app-flip-card>
+
+<div class="red-theme">
+  <app-flip-card >
+    <app-flip-card-front>
+      <h2>Card Front red-theme</h2>
+    </app-flip-card-front>
+    <app-flip-card-back>
+      <h2>Card Back red-theme</h2>
+    </app-flip-card-back>
+  </app-flip-card>
+</div>

@@ -1,0 +1,11 @@
+@import "gridstack/dist/gridstack.min.css";
+
+:host ::ng-deep {
+  .grid-stack {
+    background: #fafad2;
+  }
+
+  .grid-stack-item-content {
+    background-color: #18bc9c;
+  }
+}
