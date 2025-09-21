@@ -1,0 +1,18 @@
+<div class="container">
+  <div [ngClass]="toggleProperty ? 'flipped' : ''" class="card">
+    <div class="front">
+      <ng-content select="app-flip-card-front">
+
+      </ng-content>
+      <div class="arrow-icon" (click)="toggle()">
+        <mat-icon>arrow_forward</mat-icon>
+      </div>
+    </div>
+    <div class="back">
+      <ng-content select="app-flip-card-back"></ng-content>
+      <div class="arrow-icon" (click)="toggle()">
+        <mat-icon>arrow_back</mat-icon>
+      </div>
+    </div>
+  </div>
+</div>
