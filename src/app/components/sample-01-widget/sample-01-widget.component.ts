@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, linkedSignal, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  linkedSignal,
+  OnInit,
+  signal,
+} from '@angular/core';
 
 @Component({
   selector: 'app-sample-01-widget',
@@ -8,12 +15,8 @@ import { ChangeDetectionStrategy, Component, Input, linkedSignal, OnInit, signal
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Sample01WidgetComponent implements OnInit {
-
   protected title = signal('Sample 01 Widget');
   protected subtitle = signal('Sample 01 Widget Subtitle');
-
-
-
 
   constructor() {}
   ngOnInit(): void {}
