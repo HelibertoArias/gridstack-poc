@@ -7,9 +7,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     <ng-content></ng-content>
   </div>
   `,
-  imports: [],
 
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
+  standalone: false,
 })
 export class FlipCardFrontComponent {}

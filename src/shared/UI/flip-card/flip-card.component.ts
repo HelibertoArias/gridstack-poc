@@ -6,11 +6,10 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-flip-card',
-  imports: [CommonModule, MatIconModule],
-  templateUrl: './flip-card.component.html',
+   templateUrl: './flip-card.component.html',
   styleUrl: './flip-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
+  standalone: false,
 })
 export class FlipCardComponent implements OnInit {
   toggleProperty = false;
