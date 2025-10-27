@@ -13,7 +13,8 @@ const routes: Routes = [
   { path: 'demo-03', component: Demo03Component },
   { path: 'demo-04', component: Demo04Component },
   { path: 'signal-architecture', loadChildren: () => import('./signal-architecture/signal-architecture.module').then(m => m.SignalArchitectureModule) },
-  { path: 'change-detection-01', component: ChangeDetection01Component }
+  { path: 'change-detection-01', component: ChangeDetection01Component },
+  { path: 'dashboards', loadChildren: () => import('./features/dashboards-demo-01/dashboards-demo-01.module').then(m => m.DashboardsDemo01Module) }
 ];
 
 @NgModule({

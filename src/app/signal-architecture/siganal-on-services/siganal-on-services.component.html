@@ -1,18 +1,13 @@
 <p>siganal-on-services works!</p>
+@if (isLoading()) {
+<div>LOADING...</div>
+}
 
-{{ text() }} -- {{ textCalculated() }}
-
-Person : {{testPerson.firstName}} {{testPerson.lastName}} - {{testPerson.role}}
-<br>
-<button (click)="testName()"> test name </button>
-
-inputs
-<app-test-inputs [user]="testPerson"></app-test-inputs>
-
+<a routerLink="/">Home</a>
 <div *ngIf="roles?.length; else noRoles">
   <h3>Roles</h3>
   <select (change)="onRoleSelection($event)">
-    <option [value]="null"></option>
+    <option value="">Todos</option>
 
     <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
   </select>
@@ -21,8 +16,6 @@ inputs
   <p>{{ item.firstName }}, {{ item.lastName }} - {{ item.role }}</p>
   }
 </div>
-
-
 
 <ng-template #noRoles>
   <p>No hay roles definidos.</p>

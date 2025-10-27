@@ -1,0 +1,26 @@
+<mat-card class="widget-card" appearance="outlined">
+  <mat-card-header>
+    <!-- <div mat-card-avatar class="example-header-image"></div> -->
+    <mat-card-title>{{ title() }}</mat-card-title>
+    <!-- <mat-card-subtitle>Card subtitle</mat-card-subtitle> -->
+  </mat-card-header>
+  <!-- <img
+    mat-card-image
+    src="https://material.angular.dev/assets/img/examples/shiba2.jpg"
+    alt="Photo of a Shiba Inu"
+  /> -->
+  <mat-card-content>
+    <app-flip-card>
+      <app-flip-card-front>
+        <h2>Card Front empty</h2>
+      </app-flip-card-front>
+      <app-flip-card-back>
+        <h2>Card Back empty</h2>
+      </app-flip-card-back>
+    </app-flip-card>
+  </mat-card-content>
+  <mat-card-actions>
+    <button matButton>Action 1</button>
+    <button matButton>Action 2</button>
+  </mat-card-actions>
+</mat-card>

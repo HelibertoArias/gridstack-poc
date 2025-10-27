@@ -1,52 +1,81 @@
-import { computed, Injectable, Signal, signal } from '@angular/core';
-import { delay, of, tap } from 'rxjs';
+import { effect, Injectable, Signal, signal } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import {
+  catchError,
+  delay,
+  finalize,
+  Observable,
+  of,
+  switchMap,
+  tap,
+  throwError,
+} from 'rxjs';
 import { User, USERS } from './siganal-on-services/user-model';
-import { toSignal } from '@angular/core/rxjs-interop';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class SignalArchitectureService {
-  private readonly text = signal<string>('Initial Name');
 
-  private selectedRole = signal<string | undefined>(undefined);
-  // public users = signal<User[] | undefined>(undefined);
+  private _isLoading = signal<boolean>(true);
 
-  public userFiltered = computed(() => {
-    const role = this.selectedRole();
-    const users = this.users();
-    if (!role || !users) {
-      return users;
+  private _selectedRole = signal<string | null>(null);
+
+  public get isLoading(): Signal<boolean> {
+    return this._isLoading.asReadonly();
+  }
+
+  private set isLoading(value: boolean) {
+    this._isLoading.set(value);
+  }
+
+  public usersFiltered = signal<User[]>([]);
+
+  private getUserByRole(role: string | null): Observable<User[]> {
+    let filteredUsers = USERS;
+    if (role) {
+      filteredUsers = USERS.filter((user) => user.role === role);
     }
-    return users.filter((user) => user.role === role);
-  });
 
-  getSelectedRole() : Signal<string | undefined> {
-    return this.selectedRole.asReadonly();
+    return of(filteredUsers).pipe(delay(1500));
   }
 
-  setSelectedRole(role: string | undefined) {
-    this.selectedRole.set(role);
+  public setSelectedRole(role: string | null) {
+    this._selectedRole.set(role);
   }
 
-  users$ = of(USERS).pipe(
-    delay(3000),
-    tap(() => {
-      console.log('Users data emitted');
-    })
-  );
-
-  users = toSignal(this.users$, { initialValue: undefined });
-
-  textCalculated: Signal<string> = computed(() => {
-    return `Calculated: ${this.text()}`;
-  });
-
-  getText(): Signal<string> {
-    return this.text;
+  public getSelectedRole(): Signal<string | null> {
+    return this._selectedRole.asReadonly();
   }
 
-  setText(newText: string): void {
-    this.text.set(newText);
+  constructor() {
+    this.getUserByRoleEffect();
+  }
+
+  private getUserByRoleEffect() {
+    effect((onCleanup) => {
+      this._isLoading.set(true);
+
+      const request$ = this.getUserByRole(this._selectedRole()).pipe(
+        switchMap((users) => {
+          if (this._selectedRole() === 'admin') {
+            return throwError(() => new Error('Excepción forzada para pruebas'));
+          }
+          return of(users);
+        }),
+        catchError((error) => {
+          this._isLoading.set(false);
+          return of([]);
+        }),
+        finalize(() => {
+          // Always executed, completed or error
+          this._isLoading.set(false);
+        }),
+      );
+
+      request$.subscribe((users) => this.usersFiltered.set(users));
+
+      onCleanup(() => {
+         // Run when the effect is re-run or destroyed
+      });
+    });
   }
 }
