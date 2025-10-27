@@ -4,6 +4,7 @@ import {
   Component,
   input,
   OnInit,
+  signal,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -17,13 +18,13 @@ import { MatIconModule } from '@angular/material/icon';
 export class FlipCardComponent implements OnInit {
   showToggleButtons = input<boolean>(true);
 
-  toggleProperty = false;
+  toggleProperty = signal<boolean>(false) ;
 
   constructor() {}
 
   ngOnInit() {}
 
   toggle() {
-    this.toggleProperty = !this.toggleProperty;
+    this.toggleProperty.update((current) => !current);
   }
 }

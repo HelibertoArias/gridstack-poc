@@ -1,5 +1,5 @@
 <div class="container">
-  <div [ngClass]="toggleProperty ? 'flipped' : ''" class="card">
+  <div [ngClass]="toggleProperty() ? 'flipped' : ''" class="card">
     <div class="front">
       <ng-content select="app-flip-card-front"> </ng-content>
       @if( showToggleButtons() ){

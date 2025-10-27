@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-flip-card-back',
@@ -11,4 +11,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class FlipCardBackComponent {}
+export class FlipCardBackComponent implements OnInit {
+  constructor() {}
+
+  ngOnInit() {
+    console.log('FlipCardBackComponent initialized');
+  }
+}
+

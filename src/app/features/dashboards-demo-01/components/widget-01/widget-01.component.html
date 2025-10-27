@@ -10,7 +10,7 @@
     alt="Photo of a Shiba Inu"
   /> -->
   <mat-card-content>
-    <app-flip-card>
+    <app-flip-card [showToggleButtons]="false" #flipCard >
       <app-flip-card-front>
         <h2>Card Front empty</h2>
       </app-flip-card-front>
@@ -20,7 +20,7 @@
     </app-flip-card>
   </mat-card-content>
   <mat-card-actions>
-    <button matButton>Action 1</button>
+    <button matButton (click)="flipCard.toggle()">Flip Card</button>
     <button matButton>Action 2</button>
   </mat-card-actions>
 </mat-card>
